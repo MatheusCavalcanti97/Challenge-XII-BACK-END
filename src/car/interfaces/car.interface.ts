@@ -1,3 +1,5 @@
 export abstract class Car {
-  modelCar: string;
+  category: string;
+  text: string;
+  link: string;
 }

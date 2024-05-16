@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCarDto } from './dto/create-car.dto';
-// import { UpdateCarDto } from './dto/update-car.dto';
-
 import { PrismaService } from 'src/database/prisma.service';
 import { Car } from './interfaces/car.interface';
 
@@ -10,15 +8,16 @@ export class CarService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async createCar(data: CreateCarDto): Promise<Car> {
-    data.modelCar = data.modelCar.toUpperCase();
-    const modelCarExists = await this.prismaService.car.findFirst({
+    data.category = data.category.toUpperCase();
+    const categoryCarExists = await this.prismaService.car.findFirst({
       where: {
-        modelCar: data.modelCar,
+        category: data.category,
+        link: data.link,
       },
     });
 
-    if (modelCarExists) {
-      throw new Error('Model Car already exists');
+    if (categoryCarExists) {
+      throw new Error('Category Car already exists');
     }
 
     const car = await this.prismaService.car.create({
@@ -34,7 +33,7 @@ export class CarService {
     return car;
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<Car> {
     const carFindOne = await this.prismaService.car.findUnique({
       where: {
         idCar: id,
@@ -43,7 +42,25 @@ export class CarService {
     return carFindOne;
   }
 
-  async update(id: string, data: CreateCarDto) {
+  async findOneCategory(category: string): Promise<Car> {
+    category = category.toUpperCase();
+    const carFindOneCategory = await this.prismaService.car.findUnique({
+      where: {
+        category: category,
+      },
+    });
+
+    if (!carFindOneCategory) {
+      throw new Error('Category Car Not cadastred.');
+    }
+    return await this.prismaService.car.findUnique({
+      where: {
+        category: category,
+      },
+    });
+  }
+
+  async update(id: string, data: CreateCarDto): Promise<Car> {
     const modelCarExists = await this.prismaService.car.findUnique({
       where: {
         idCar: id,
@@ -79,20 +96,21 @@ export class CarService {
     }
   }
 
-  async removePerModelCar(modelCar: string): Promise<Car> {
-    const modelCarExists = await this.prismaService.car.findFirst({
+  async removePerModelCar(category: string): Promise<Car> {
+    category = category.toUpperCase();
+    const categoryCarExists = await this.prismaService.car.findFirst({
       where: {
-        modelCar: modelCar,
+        category: category,
       },
     });
 
-    if (!modelCarExists) {
+    if (!categoryCarExists) {
       throw new Error('Model Car not Exists');
     }
     console.log('Model Car exists and will be deleted');
 
     const car = await this.prismaService.car.delete({
-      where: { modelCar: modelCar },
+      where: { category: category },
     });
     return car;
   }

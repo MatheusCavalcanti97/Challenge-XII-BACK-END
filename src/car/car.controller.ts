@@ -24,25 +24,34 @@ export class CarController {
   }
 
   @Get('allCar')
-  async findAll() {
+  async findAll(): Promise<Car[]> {
     const car = await this.carService.findAll();
     return car;
   }
 
   @Get('findOne/:id')
-  async findOne(@Param('id') id: string) {
-    return this.carService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<Car> {
+    const car = await this.carService.findOne(id);
+    return car;
+  }
+
+  @Get('findOneCategory/:category')
+  async findOneCategory(@Param('category') category: string): Promise<Car> {
+    const car = await this.carService.findOneCategory(category);
+    return car;
   }
 
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateCarDto: UpdateCarDto) {
-    const carPut = this.carService.update(id, updateCarDto);
+    const carPut = await this.carService.update(id, updateCarDto);
     return carPut;
   }
 
-  @Delete('findOne/:modelCar')
-  async removePerModelCar(@Param('modelCar') modelCar: string) {
-    const car = await this.carService.removePerModelCar(modelCar);
+  @Delete('findOne/:category')
+  async removePerCategoryCar(
+    @Param('category') category: string,
+  ): Promise<Car> {
+    const car = await this.carService.removePerModelCar(category);
     return car;
   }
 
@@ -52,9 +61,3 @@ export class CarController {
     return car;
   }
 }
-
-// @Put()
-// async update(@Body() updateCarDto: CreateCarDto) {
-//   const car = await this.carService.update(updateCarDto.id, updateCarDto);
-//   return car;
-// }

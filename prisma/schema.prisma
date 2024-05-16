@@ -9,22 +9,25 @@ datasource db {
 
 model Car {
   idCar    String @id @default(uuid())
-  modelCar String @unique
-  User     User?
+  category String @unique @db.VarChar(50)
+  text     String @db.VarChar(250)
+  link     String @db.VarChar(250)
+
+  User User[]
 
   @@map("car")
 }
 
 model User {
-  id           Int     @id @default(autoincrement())
-  fisrtName    String  @db.VarChar(50)
+  id           String  @id @default(uuid())
+  firstName    String  @db.VarChar(50)
   lastName     String  @db.VarChar(50)
   email        String  @unique @db.VarChar(50)
   country      String  @db.VarChar(30)
   city         String  @db.VarChar(30)
-  referralCode String  @db.VarChar(8)
+  referralCode String  @db.VarChar(250)
   ownCar       Boolean
-  carId        String  @unique
+  carId        String
   carModel     Car     @relation(fields: [carId], references: [idCar])
 
   @@map("user")
