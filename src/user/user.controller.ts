@@ -1,14 +1,6 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+
 import { User } from './interfaces/user.interface';
 import { UserService } from './user.service';
 
@@ -23,29 +15,14 @@ export class UserController {
   }
 
   @Get('allUser')
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<CreateUserDto[]> {
     const user = await this.userService.findAll();
     return user;
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  @Get('findUser/:id')
+  async findOneUser(@Param('id') id: string): Promise<CreateUserDto> {
+    const user = await this.userService.findOneUser(id);
+    return user;
   }
 }
-
-// @Get('allCar')
-// async findAllCars(): Promise<Car[]> {
-//   const car = await this.userService.findAllCars();
-//   return car;
-// }

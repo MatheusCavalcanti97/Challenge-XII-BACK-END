@@ -29,7 +29,6 @@ export class CarService {
 
   async findAll(): Promise<Car[]> {
     const car = await this.prismaService.car.findMany();
-
     return car;
   }
 

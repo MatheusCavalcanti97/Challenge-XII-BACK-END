@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/database/prisma.service';
 import { User } from './interfaces/user.interface';
 import { Car } from '@prisma/client';
@@ -54,25 +53,25 @@ export class UserService {
     return users;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
+  async findOneUser(idUser: string): Promise<User> {
+    const existsUser = await this.prismaService.user.findUnique({
+      where: {
+        id: idUser,
+      },
+    });
 
-  update(id: number, data: UpdateUserDto) {
-    return data;
-  }
+    if (!existsUser) {
+      throw new Error('User not found');
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+    return existsUser;
   }
 
   async findAllCars(): Promise<Car[]> {
     const cars = await this.prismaService.car.findMany();
-
     if (cars.length == 0) {
       throw new Error('There are no cars');
     }
-
     return cars;
   }
 }
