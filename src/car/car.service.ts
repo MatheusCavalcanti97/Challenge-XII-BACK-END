@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCarDto } from './dto/create-car.dto';
 // import { UpdateCarDto } from './dto/update-car.dto';
-import { Car } from './interfaces/car.interface';
+
 import { PrismaService } from 'src/database/prisma.service';
+import { Car } from './interfaces/car.interface';
 
 @Injectable()
 export class CarService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async createCar(data: CreateCarDto): Promise<Car> {
+    data.modelCar = data.modelCar.toUpperCase();
     const modelCarExists = await this.prismaService.car.findFirst({
       where: {
         modelCar: data.modelCar,
@@ -28,6 +30,7 @@ export class CarService {
 
   async findAll(): Promise<Car[]> {
     const car = await this.prismaService.car.findMany();
+
     return car;
   }
 
@@ -62,6 +65,35 @@ export class CarService {
   }
 
   async remove(id: string): Promise<void> {
-    await this.prismaService.car.delete({ where: { idCar: id } });
+    const modelCarExists = await this.prismaService.car.findFirst({
+      where: {
+        idCar: id,
+      },
+    });
+
+    if (!modelCarExists) {
+      throw new Error('Model Car not Exists');
+    } else {
+      await this.prismaService.car.delete({ where: { idCar: id } });
+      console.log('Car Exclude of the data.');
+    }
+  }
+
+  async removePerModelCar(modelCar: string): Promise<Car> {
+    const modelCarExists = await this.prismaService.car.findFirst({
+      where: {
+        modelCar: modelCar,
+      },
+    });
+
+    if (!modelCarExists) {
+      throw new Error('Model Car not Exists');
+    }
+    console.log('Model Car exists and will be deleted');
+
+    const car = await this.prismaService.car.delete({
+      where: { modelCar: modelCar },
+    });
+    return car;
   }
 }

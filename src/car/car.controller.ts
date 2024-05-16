@@ -17,7 +17,7 @@ import { UpdateCarDto } from './dto/update-car.dto';
 export class CarController {
   constructor(private readonly carService: CarService) {}
 
-  @Post()
+  @Post('add')
   async createCar(@Body() createCarDto: CreateCarDto): Promise<Car> {
     const car = await this.carService.createCar(createCarDto);
     return car;
@@ -29,7 +29,7 @@ export class CarController {
     return car;
   }
 
-  @Get(':id')
+  @Get('findOne/:id')
   async findOne(@Param('id') id: string) {
     return this.carService.findOne(id);
   }
@@ -40,9 +40,16 @@ export class CarController {
     return carPut;
   }
 
+  @Delete('findOne/:modelCar')
+  async removePerModelCar(@Param('modelCar') modelCar: string) {
+    const car = await this.carService.removePerModelCar(modelCar);
+    return car;
+  }
+
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
-    this.carService.remove(id);
+    const car = await this.carService.remove(id);
+    return car;
   }
 }
 
