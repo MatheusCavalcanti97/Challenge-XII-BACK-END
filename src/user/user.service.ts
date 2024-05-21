@@ -19,7 +19,7 @@ export class UserService {
     });
 
     if (existsEmail) {
-      throw new Error('Email already exists');
+      throw new Error('Email already exists.');
     }
 
     this.allCars.push(await this.findAllCars());
@@ -61,7 +61,7 @@ export class UserService {
     });
 
     if (!existsUser) {
-      throw new Error('User not found');
+      throw new Error('User not found.');
     }
 
     return existsUser;
@@ -70,7 +70,7 @@ export class UserService {
   async findAllCars(): Promise<Car[]> {
     const cars = await this.prismaService.car.findMany();
     if (cars.length == 0) {
-      throw new Error('There are no cars');
+      throw new Error('There are no cars.');
     }
     return cars;
   }
