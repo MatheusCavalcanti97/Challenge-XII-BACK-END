@@ -61,7 +61,7 @@ export class UserService {
     });
 
     if (!existsUser) {
-      throw new Error('User not found.');
+      throw new Error('User not found!');
     }
 
     return existsUser;
