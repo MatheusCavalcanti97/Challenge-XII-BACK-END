@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Car {
+  idCar    String @id @default(uuid())
+  category String @unique @db.VarChar(50)
+  text     String @db.VarChar(250)
+  link     String @db.VarChar(250)
+
+  User User[]
+
+  @@map("car")
+}
+
+model User {
+  id           String  @id @default(uuid())
+  firstName    String  @db.VarChar(50)
+  lastName     String  @db.VarChar(50)
+  email        String  @unique @db.VarChar(50)
+  country      String  @db.VarChar(30)
+  city         String  @db.VarChar(30)
+  referralCode String  @db.VarChar(250)
+  ownCar       Boolean
+  carId        String
+  carModel     Car     @relation(fields: [carId], references: [idCar])
+
+  @@map("user")
+}
