@@ -13,9 +13,10 @@ $ npm install
 ```
 
 ## After installing all necessary dependencies, run the command:
+
 ```bash
 $ npx prisma generate dev
-```bash
+
 
 ## Running the app
 
